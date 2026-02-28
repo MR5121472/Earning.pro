@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earning.pro - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>body { background: #050810; font-family: sans-serif; }</style>
+</head>
+<body class="p-4 max-w-md mx-auto text-white">
+
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-800 p-8 rounded-[2rem] shadow-xl mb-6">
+        <p class="text-xs opacity-70">Balance</p>
+        <h1 class="text-4xl font-bold" id="balance_val">$ {{ user.balance }}</h1>
+    </div>
+
+    <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+        <h3 class="font-bold mb-4">Daily Video Task</h3>
+        <div id="task_box" class="flex justify-between items-center bg-black/40 p-4 rounded-xl">
+            <span class="text-sm">Watch Ad (30s)</span>
+            <button onclick="startTask()" id="task_btn" class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-xs uppercase">Start Task</button>
+        </div>
+        <p id="timer_text" class="text-center mt-3 text-yellow-500 font-bold hidden">Wait: <span id="seconds">30</span>s</p>
+    </div>
+
+    <script>
+        function startTask() {
+            let btn = document.getElementById('task_btn');
+            let timerBox = document.getElementById('timer_text');
+            let secSpan = document.getElementById('seconds');
+            let timeLeft = 30;
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            timerBox.classList.remove('hidden');
+
+            let timer = setInterval(() => {
+                timeLeft--;
+                secSpan.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    finishTask();
+                }
+            }, 1000);
+        }
+
+        async function finishTask() {
+            const res = await fetch('/complete_task', { method: 'POST' });
+            const data = await res.json();
+            if (data.status === 'success') {
+                alert("Task Complete! $0.50 added.");
+                document.getElementById('balance_val').innerText = "$ " + data.new_balance;
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
