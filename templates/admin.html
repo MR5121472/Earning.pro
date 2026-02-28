@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin - Earning.pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-white p-6">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6 text-blue-500">Pending Activations</h1>
+        <div class="bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
+            <table class="w-full text-left">
+                <thead class="bg-gray-800 text-xs uppercase text-gray-400">
+                    <tr>
+                        <th class="p-4">Email</th>
+                        <th class="p-4">TID</th>
+                        <th class="p-4 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-800">
+                    {% for u in users %}
+                    <tr>
+                        <td class="p-4 text-sm">{{ u.email }}</td>
+                        <td class="p-4 text-sm font-mono text-yellow-500">{{ u.tid }}</td>
+                        <td class="p-4 text-center">
+                            <a href="/admin/approve/{{ u.id }}" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-bold text-xs">APPROVE</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if not users %}
+            <p class="p-10 text-center text-gray-500 italic">No pending requests.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
